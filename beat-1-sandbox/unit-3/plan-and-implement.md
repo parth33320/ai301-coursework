@@ -3,11 +3,9 @@
 ---
 
 *Plan comment link*
-
 https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5966383179
 
 *Branch name*
-
 fix/14-offline-eval-runner
 
 ## 1. Run History Breakdown
