@@ -2,6 +2,12 @@
 
 ---
 
+*Plan comment link*
+https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5966383179
+
+*Branch name*
+fix/14-offline-eval-runner
+
 ## 1. Run History Breakdown
 
 To build a robust, deterministic plan-check evaluation skill, we iterated through calibration and evaluation runs against the 20 scored packages and 4 calibration packages in `eval/packages/`.
