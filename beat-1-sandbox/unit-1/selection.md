@@ -16,16 +16,21 @@
   ]
 }
 
-Run History
-Initial calibration run (calib-01 through calib-04) to test harness setup.
+## Run History
 
-First full run with basic rubric (15/20 PASS).
+* **Initial calibration run:** `calib-01` through `calib-04` to test harness setup.
+* **First full run:** Executed with the basic rubric (15/20 PASS).
+* **Final run:** Rubric refinement yielding 18/20 PASS (saved via `eval-run.txt`).
 
-Final rubric refinement yielding 18/20 PASS (saved via eval-run.txt).
+---
 
-Check Rationale
-maintainer_alive: "The maintainer has pushed commits or responded to issues within the last 30 days."
-Rationale: Ensures PRs opened on the repository will actually be reviewed and merged.
+## Check Rationale
 
-Trade-offs
-We prioritized maintainer response recency over loose issue difficulty labels to avoid selecting dead repositories.
+* **`maintainer_alive`:** *"The maintainer has pushed commits or responded to issues within the last 30 days."*
+  * **Rationale:** Ensures PRs opened on the repository will actually be reviewed and merged.
+
+---
+
+## Trade-offs
+
+* We prioritized **maintainer response recency** over loose issue difficulty labels to avoid selecting dead repositories.
