@@ -6,12 +6,12 @@ parth33320
 
 ## Posted upstream
 *Claim comment*
-https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5964737016
-- Claiming this issue to investigate and reproduce the reported behavior.
+[Claim Comment Link](https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5964737016)
+> Claiming this issue to investigate and reproduce the reported behavior.
 
 *Reproduction comment*
-https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5964754456
-- Successfully reproduced Issue #14 on Windows 11 / Python 3.11+. Executing scripts/run_evals.py returns immediately without running EvalSuite or generating eval_results.json, confirming offline eval runner is unimplemented.
+[Reproduction Comment Link](https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5964754456)
+> Successfully reproduced Issue #14 on Windows 11 / Python 3.11+. Executing scripts/run_evals.py returns immediately without running EvalSuite or generating eval_results.json, confirming offline eval runner is unimplemented.
 
 ## Run History
 1. Initial calibration run (calib-02) to verify test harness setup.
