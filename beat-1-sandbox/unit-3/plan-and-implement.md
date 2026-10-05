@@ -67,17 +67,24 @@ $ grep -rn EvalSuite --include=*.py .
 ./rag/evaluator/eval_suite.py:22:class EvalSuite:
 ```
 
-After (Linux container, branch `fix/14-offline-eval-runner`):
+After (Windows 11 / PowerShell, Python 3.14.7, branch `fix/14-offline-eval-runner`, commit `03cb53d`):
 
 ```
-$ python scripts/run_evals.py
+> python --version
+Python 3.14.7
+> python scripts/run_evals.py; "exit code: $LASTEXITCODE"
 Running RAG evaluation suite...
+2026-10-04 21:31:04 [info     ] relevance_scored               avg_score=0.14285714285714285 chunks_count=2 query_len=7
+2026-10-04 21:31:04 [info     ] faithfulness_checked           claims_count=2 score=1.0 supported_count=2
+2026-10-04 21:31:04 [info     ] eval_suite_complete            faithfulness=1.0 overall=0.5714285714285714 relevance=0.14285714285714285
 Scored 1 profile(s), mean overall 0.571
-Evaluation complete. Results written to eval_results.json
+Evaluation complete. Results written to C:\Users\Parth\Documents\pathreview-ai301-fa26-s3\eval_results.json
 exit code: 0
-$ cat eval_results.json
+> Test-Path eval_results.json
+True
+> Get-Content eval_results.json
 {
-  "timestamp": "2026-10-05T01:03:28.604167+00:00",
+  "timestamp": "2026-10-05T01:31:04.944112+00:00",
   "profile_count": 1,
   "mean_relevance": 0.14285714285714285,
   "mean_faithfulness": 1.0,
@@ -92,6 +99,9 @@ $ cat eval_results.json
     }
   ]
 }
+> python -m pytest tests/unit/test_run_evals.py -q
+..                                                                                                                        [100%]
+2 passed in 0.07s
 ```
 
 Unit tests on the branch:
