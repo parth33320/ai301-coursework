@@ -12,11 +12,101 @@ https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14
 
 **Verdict output**
 
-<!-- REPLACE THIS WHOLE CODE BLOCK with your skill's live-mode output for issue #14, pasted verbatim, ending with the fenced JSON block. It must record "accept". Command:
-claude "issue-select: grade these candidate first issues: https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14 <URL2> <URL3>" -->
-
 ```
-paste the output here, including the closing JSON block
+Now I'll grade both issues against the rubric:
+
+Grade Summary
+
+Issue #14: Implement an offline eval runner
+
+┌───────────────────────┬───────┬─────────────────────────────────────────────────────────────────────────────────┐
+│         Check         │ Grade │                                    Evidence                                     │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ repo_alive            │ pass  │ Not archived; last push 2026-09-16 (18 days ago); newest of last 5 commits      │
+│                       │       │ 2026-10-05 (within 60 days)                                                     │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ maintainer_responsive │ pass  │ Opened by Aburke225 with author_association COLLABORATOR                        │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│                       │       │ Clear request: "score the benchmark profiles and write eval_results.json";      │
+│ scope_bounded         │ pass  │ listed files (scripts/run_evals.py, rag/evaluator/eval_suite.py); estimated     │
+│                       │       │ 7–10 hours                                                                      │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ unclaimed             │ pass  │ Assignees: none; all comments from parth33320 (user); per house rule, user's    │
+│                       │       │ own comments don't count as claims                                              │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ ai_policy_allows      │ pass  │ CONTRIBUTING.md does not ban AI-generated or AI-assisted contributions; no      │
+│                       │       │ stated policy to prohibit                                                       │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ fit_signals           │ pass  │ Opened by collaborator (Aburke225) with clear description of expected behavior  │
+│ (preferred)           │       │ and acceptance criteria                                                         │
+└───────────────────────┴───────┴─────────────────────────────────────────────────────────────────────────────────┘
+
+Verdict: ACCEPT
+
+---
+
+Issue #64: Relevance scorer partial overlap test fixture bug
+
+┌───────────────────────┬───────┬─────────────────────────────────────────────────────────────────────────────────┐
+│         Check         │ Grade │                                    Evidence                                     │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ repo_alive            │ pass  │ Not archived; last push 2026-09-16 (18 days ago); newest of last 5 commits      │
+│                       │       │ 2026-10-05 (within 60 days)                                                     │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ maintainer_responsive │ pass  │ Last 5 commits (5/5 within 60 days): 2026-10-05, 2026-09-16, 2026-09-16,        │
+│                       │       │ 2026-09-16, 2026-08-24                                                          │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│                       │       │ Clear problem: fixture has full keyword overlap when test expects partial;      │
+│ scope_bounded         │ pass  │ clear fix: adjust fixture tokens to get genuine partial overlap; one test, one  │
+│                       │       │ file                                                                            │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│                       │       │ Per Path Review house rule: "other students' claim comments do not block an     │
+│ unclaimed             │ pass  │ issue"; april-hpxd and jahnvisethjs claimed on 2026-09-27 and 2026-09-29, but   │
+│                       │       │ classroom repo rule applies                                                     │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ ai_policy_allows      │ pass  │ No stated policy banning AI contributions                                       │
+├───────────────────────┼───────┼─────────────────────────────────────────────────────────────────────────────────┤
+│ fit_signals           │ pass  │ Labeled with "good first issue" and tier-1; clear expected behavior (0.3 <      │
+│ (preferred)           │       │ score < 0.9)                                                                    │
+└───────────────────────┴───────┴─────────────────────────────────────────────────────────────────────────────────┘
+
+Verdict: ACCEPT
+
+---
+
+[
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14",
+    "checks": [
+      {"name": "repo_alive", "grade": "pass", "evidence": "Not archived; last push 2026-09-16 (18 days); newest commit 2026-10-05 within 60 days"},
+      {"name": "maintainer_responsive", "grade": "pass", "evidence": "Issue opened by Aburke225 with author_association COLLABORATOR"},
+      {"name": "scope_bounded", "grade": "pass", "evidence": "Score benchmark profiles and write eval_results.json; files listed; 7–10 hour estimate"},
+      {"name": "unclaimed", "grade": "pass", "evidence": "No assignees; all comments from parth33320 ignored per house rule"},
+      {"name": "ai_policy_allows", "grade": "pass", "evidence": "CONTRIBUTING.md contains no AI ban; no stated policy"},
+      {"name": "fit_signals", "grade": "pass", "evidence": "Opened by collaborator with clear spec; aligns with user goal to improve backend/evaluation tooling"}
+    ],
+    "verdict": "accept"
+  },
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s3/issues/64",
+    "checks": [
+      {"name": "repo_alive", "grade": "pass", "evidence": "Not archived; last push 2026-09-16 (18 days); newest commit 2026-10-05 within 60 days"},
+      {"name": "maintainer_responsive", "grade": "pass", "evidence": "5 of last 5 commits within 60 days (active maintenance)"},
+      {"name": "scope_bounded", "grade": "pass", "evidence": "Fix fixture overlap: change chunk to drop 'framework' and 'web' for genuine 2/4 partial overlap; remove xfail marker"},
+      {"name": "unclaimed", "grade": "pass", "evidence": "Classroom repo house rule: classmates' claim comments don't block; april-hpxd (2026-09-27) and jahnvisethjs (2026-09-29) claims ignored"},
+      {"name": "ai_policy_allows", "grade": "pass", "evidence": "No stated AI policy; PR #87 included AI-use disclosure, suggesting allowed with disclosure"},
+      {"name": "fit_signals", "grade": "pass", "evidence": "Labeled 'good first issue' and 'tier-1'; test fixture bug with clear acceptance criteria"}
+    ],
+    "verdict": "accept"
+  }
+]
+
+Ranking by fit
+
+Both issues pass all required checks. Ranked by your fit profile:
+
+1. #14 (higher fit) — Backend evaluation infrastructure (RAG pipeline work, test infrastructure). Aligns directly with your goal to "get better at backend and evaluation tooling"; 7–10 hours of meaningful work.
+2. #64 (lower fit) — One-file test fixture fix. Tier-1 starter issue; simpler scope, less aligned with your stated learning goal (though good for unblocking other work).
 ```
 
 ---
@@ -54,6 +144,8 @@ Loosening `scope_bounded` could flip the scope-reject issues that agreed before,
 1. **Fit and time.** Issue #14 asks me to implement an offline eval runner in `scripts/run_evals.py` that scores benchmark profiles with the existing `EvalSuite` and writes `eval_results.json`. That is Python, test and tooling work, which matches what I use and what I want to get better at (evaluation tooling). The issue estimates 7 to 10 hours; I reduced it to one script plus one unit test, so it fits the time I have this term.
 2. **What the verdict caught, and what I weighed myself.** The verdict correctly checked that the repo is active, that a maintainer opened the issue, that nobody was assigned and no PR was linked, and that the repo states no AI ban. The rubric cannot see the "tier-3 / advanced" label and the 7 to 10 hour estimate, or whether I could reproduce the bug. I weighed those myself and reproduced the stub behavior before choosing it.
 3. **Anticipated difficulty in claiming it.** Classmates may claim the same issue, but the house rules say that does not block me, so I will post my own claim and my own reproduction. The harder part is that the issue is labelled advanced, so I will keep my claim to an investigation and not promise a fix or a date.
+
+   I ran the skill after I had already started working on #14, so my first live run rejected it only because it counted my own comments as a claim. I added a line to `scope.md` telling the skill to ignore comments by `parth33320`, and the next run accepted #14.
 
 ---
 
