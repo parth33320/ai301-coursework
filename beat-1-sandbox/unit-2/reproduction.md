@@ -64,7 +64,7 @@ Reasoning: All seven required checks passed on specific evidence in the package.
 ## Check Rationale
 Check: specific_modest_claim_comment
 Pass condition as it now reads in rubric.md: "The claim comment is human-voiced, refers to the issue's specifics, and promises only an investigation, not a fix, a date, or "assign me" boilerplate"
-Why it reads this way: [one or two sentences, e.g. it keeps a claim to a promise of investigation, because the house rules ask for a claim that names the issue and doesn't over-promise.]
+Why it reads this way: It reads this way because the house rules ask for a claim that names the issue and promises only an investigation. A claim that guaranteed a fix or a date would break that rule, and the check is meant to hold a draft to it.
 
 ## Trade-offs
 I worded repo_ai_disclosure to pass when the repo's stated policy requires nothing, and to fail only when the policy requires disclosure and the comments don't disclose. That keeps the check from rejecting good packages on repos with no AI policy, so it doesn't cost any clear-accept packages. The cost is that it can only see a policy stated in the repo-facts block. A repo that expects disclosure only by custom, or in a place the block doesn't quote, would pass when a stricter reviewer would reject. Because all seven checks are required, a single failed check rejects the whole package, so I also accept that one wrong grade on any check flips the verdict.
