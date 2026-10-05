@@ -1,105 +1,132 @@
-# Plan and Implement Deliverable: Plan-Check Skill & Eval Suite
+# Unit 3 — Plan and Build
+
+Path: `beat-1-sandbox/unit-3/plan-and-implement.md`
 
 ---
 
-*Plan comment link*
+## Posted upstream
+
+**GitHub username**
+
+parth33320
+
+**Plan comment**
 
 https://github.com/codepath/pathreview-ai301-fa26-s3/issues/14#issuecomment-5966383179
 
-*Branch name*
+> Plan for #14, built from my reproduction above (commit `2f4e82f`, Windows NT 10.0.22621.0, PowerShell, Python 3.14.7; the issue does not state an OS or Python version, so there is no difference to note).
+> 
+> **Diagnosis:** `scripts/run_evals.py` is a stub. `main()` only prints two lines around a `# TODO: Implement eval runner` block. In my repro, `EvalSuite` has exactly one hit across the `.py` files, its definition at `rag/evaluator/eval_suite.py:22`, so nothing calls it. Running the script exits 0 and prints "Results written to eval_results.json", but `Test-Path eval_results.json` returned `False`. `make eval` and the RAG Evaluation workflow already run the script and read `eval_results.json`, so no change is needed there.
+> 
+> **Scope:** I plan to make the script score each profile in `tests/fixtures/sample_profiles/` with the existing `EvalSuite` and write `eval_results.json`. I won't change the scorers, `Makefile` or the workflow, call a live LLM, or add fixtures.
+> 
+> **Files:** `scripts/run_evals.py` and a new `tests/unit/test_run_evals.py`.
+> 
+> **Approach:** load each profile, build a query (repo languages and topics), chunks (repo descriptions and READMEs) and a deterministic feedback string from the same fields so the run stays offline, call `EvalSuite().run(...)`, and write per-profile and mean relevance, faithfulness and overall scores. It exits 1 if no profiles are found, and prints the "written" line only after the file is written.
+> 
+> **Test plan:** re-run my repro. Expect exit code 0, `eval_results.json` present and valid JSON with `profile_count` 1 and scores between 0.0 and 1.0 for `basic_profile`, an `EvalSuite` hit in `scripts/run_evals.py`, and the new unit test plus the existing relevance and faithfulness tests passing.
+> 
+> **Unknowns:** whether maintainers would rather the feedback come from the real generator with the mock provider (I chose a deterministic stand-in to stay offline), and I could not run `make eval` since `make` isn't installed on my Windows setup. I'm investigating and planning only so far; happy to adjust if you'd prefer a different shape.
+
+---
+
+## Your branch
+
+**Branch**
 
 fix/14-offline-eval-runner
 
-## 1. Run History Breakdown
+**Evidence**
 
-To build a robust, deterministic plan-check evaluation skill, we iterated through calibration and evaluation runs against the 20 scored packages and 4 calibration packages in `eval/packages/`.
+Unit 2 repro steps re-run against the change. The "before" is the output I posted in unit 2 (Windows 11 / PowerShell, Python 3.14.7, commit `2f4e82f`), plus the same commands on the base commit in a Linux container (Python 3.11.15). The "after" is the same on the branch, commit `03cb53d`.
 
-### Run 0: Initial Baseline (Template / Empty Components)
-- **Status:** Failed / Refused to grade.
-- **Finding:** The harness correctly refused to grade when `rubric.md`, `evidence-guide.md`, or `procedure.md` contained placeholder templates without concrete checks or verdict rules.
+Before (my unit 2 repro comment, Windows):
 
-### Run 1: Core Check Formulation & Initial Calibration
-- **Changes:**
-  - Formulated 4 core checks in `skill/rubric.md`: `grounded_diagnosis`, `bounded_scope`, `executability_and_testability`, and `thread_and_repo_conventions`.
-  - Defined explicit evidence locations in `skill/references/evidence-guide.md` mapping each check to sections of the package bundle (repro-evidence block, issue context, plan, and repo-facts block).
-  - Defined a 4-step execution procedure in `skill/procedure.md`.
-- **Results:**
-  - `pkg-01`, `pkg-07`, `pkg-11`, `pkg-16`: Correctly rejected for `wrong-cause` (ungrounded diagnoses contradicting control runs).
-  - `pkg-06`, `pkg-12`, `pkg-15`, `pkg-19`: Correctly rejected for `scope-creep` (unrequested migrations and redesigns).
-  - `pkg-10`, `pkg-17`, `pkg-18`: Correctly rejected for `unbuildable` (vague steps / unobservable test plans).
+```
+python scripts/run_evals.py
+Running RAG evaluation suite...
+Evaluation complete. Results written to eval_results.json
+Exit code: 0
 
-### Run 2: Edge-Case Refinement (Thread & Repo Conventions)
-- **Changes:**
-  - Refined `thread_and_repo_conventions` check to explicitly check for:
-    1. Direct engagement with maintainer instructions in thread highlights (e.g., testing patched binaries requested by owners in `pkg-04`).
-    2. Mandatory AI-use disclosure compliance when repo-facts block mandates AI assistance statements (e.g., `pkg-20` on Ghostty repo policy).
-- **Results:**
-  - `pkg-04`: Correctly rejected (`thread-convention`) for ignoring maintainer request for binary feedback.
-  - `pkg-20`: Correctly rejected (`thread-convention`) for missing mandatory AI disclosure.
+Test-Path eval_results.json   ->  False
+Select-String -Pattern "EvalSuite" over *.py -> one hit: rag\evaluator\eval_suite.py, line 22
+```
 
-### Run 3: Final Confirming Run (20/20 PASS)
-- **Command:**
-  ```bash
-  python3 eval/run_eval.py --rubric skill/rubric.md --evidence skill/references/evidence-guide.md --procedure skill/procedure.md --save-run eval/eval-run.txt
-  ```
-- **Output Metrics:**
-  - **Agreement:** 20 / 20 scored items (100% agreement, exceeding the 18/20 bar).
-  - **Category Floor:**
-    - `clear-accept`: 7 / 7
-    - `scope-creep`: 4 / 4
-    - `thread-convention`: 2 / 2
-    - `unbuildable`: 3 / 3
-    - `wrong-cause`: 4 / 4
-  - **Verdict:** PASS
+Before (Linux container, base commit):
+
+```
+$ git rev-parse HEAD
+2f4e82f52efbcfcc57d65b3fa5348672163ca088
+$ python scripts/run_evals.py
+Running RAG evaluation suite...
+Evaluation complete. Results written to eval_results.json
+exit code: 0
+$ ls eval_results.json
+ls: cannot access 'eval_results.json': No such file or directory
+$ grep -rn EvalSuite --include=*.py .
+./rag/evaluator/eval_suite.py:22:class EvalSuite:
+```
+
+After (Linux container, branch `fix/14-offline-eval-runner`):
+
+```
+$ python scripts/run_evals.py
+Running RAG evaluation suite...
+Scored 1 profile(s), mean overall 0.571
+Evaluation complete. Results written to eval_results.json
+exit code: 0
+$ cat eval_results.json
+{
+  "timestamp": "2026-10-05T01:03:28.604167+00:00",
+  "profile_count": 1,
+  "mean_relevance": 0.14285714285714285,
+  "mean_faithfulness": 1.0,
+  "mean_overall": 0.5714285714285714,
+  "results": [
+    {
+      "profile": "basic_profile",
+      "repo_count": 2,
+      "relevance_score": 0.14285714285714285,
+      "faithfulness_score": 1.0,
+      "overall_score": 0.5714285714285714
+    }
+  ]
+}
+```
+
+Unit tests on the branch:
+
+```
+$ python -m pytest tests/unit/test_run_evals.py tests/unit/test_relevance_scorer.py tests/unit/test_faithfulness_checker.py -q
+38 passed, 5 xfailed in 0.12s
+```
+
+(The 5 xfailed are existing strict xfails in the scorer tests. Nine other unit test files cannot be collected in the container because packages such as `jose`, `numpy` and `sqlalchemy` are not installed; they fail the same way on `main`.)
+
+## Eval iterations
+
+**Run history**
+
+1. Full run (2026-10-03T05:43:29Z): 20/20 agree, every category matched (clear-accept 7/7, scope-creep 4/4, thread-convention 2/2, unbuildable 3/3, wrong-cause 4/4). This is the run saved in `eval-run.txt`, so the last score matches its agreement line (`agreement: 20/20 scored items`).
+
+**Package analysis**
+
+Package: `pkg-07` (processing/p5.js#8930, category wrong-cause). My rubric decided `reject`; the gold label is `reject`.
+
+The candidate plan blames the Friendly Error System being tree-shaken out of the 2.x bundle. The package's repro evidence includes a control run in which an instance-method friendly error prints in the same build, so FES is present and the diagnosis is contradicted. My `grounded_diagnosis` check says the stated cause must not contradict any facts or control outputs in the repro evidence, so it grades `fail`, and my verdict rule (accept only if every required check passes) gives `reject`.
+
+**Check rationale**
+
+Check as it reads in `tools/plan-check/rubric.md`:
+
+> | thread_and_repo_conventions | The candidate plan comment read against the issue thread highlights and repo-facts block (contributing policy / AI disclosure requirements) | The plan comment directly engages with any explicit maintainer direction in the thread AND complies with all repo policies, including mandatory AI-use disclosures if required by the repo-facts policy. | required |
+
+It has two halves because the thread-convention category has two different kinds of miss: pkg-04 (the plan never engages the owner's direction in the thread) and pkg-20 (a good plan whose comment has no AI-use disclosure that the repo's policy requires). One check that reads the comment against both the thread highlights and the repo-facts block catches both, and the evidence column names those two sources so the grader reads the comment against them rather than judging it in isolation.
+
+**Trade-offs**
+
+This check gives up the ability to pass a plan it cannot verify. It needs the thread and the repo's policy as evidence, and the verdict rule treats `unclear` as a fail. I saw this when I ran the skill live on my #14 plan from a session that could not reach GitHub: the other three checks passed, but this one came back `unclear`, so the verdict was `reject` until the thread was readable. I accept that cost, because a plan I cannot check against the thread is not ready to post. It also only sees a disclosure policy that is stated in the repo-facts block, so a repo that expects disclosure only by custom would pass.
 
 ---
 
-## 2. Deep Dive Package Analysis: `pkg-07`
-
-- **Source Issue:** `processing/p5.js#8930`
-- **Category:** `wrong-cause`
-- **Gold Label Verdict:** `reject`
-
-### Issue & Plan Context
-In `pkg-07`, the issue reports an error handling failure in p5.js Friendly Error System (FES). The candidate plan claims that the root cause of the error is that the FES module was tree-shaken out of the 2.x production bundle during build optimization.
-
-### Repro Evidence Reality
-In the package's repro-evidence block, Step 4 includes a control run testing error output in the exact same build environment. The control run demonstrates that instance-method friendly error messages print successfully in the same build, proving that FES is active and present in the bundle.
-
-### Analysis & Rejection Rationale
-Because the control run in Step 4 proves that FES is loaded and functional in the build, the candidate plan's diagnosis (that FES was tree-shaken out) is empirically false and contradicted by the package's own control evidence.
-
-### Check Mechanism
-Our `grounded_diagnosis` check evaluates whether the candidate plan's stated cause directly explains the failure without contradicting any control runs or steps in the repro evidence block. When executed against `pkg-07`:
-1. The evidence gatherer compares the plan's diagnosis ("FES tree-shaken out") against Step 4 of the repro evidence ("FES prints friendly errors for instance methods in same build").
-2. The check identifies the explicit contradiction.
-3. `grounded_diagnosis` evaluates to `fail`.
-4. The verdict rule (`accept if every required check passes`) triggers a `reject` verdict.
-
----
-
-## 3. Check Rationale & Trade-Offs
-
-### 1. `grounded_diagnosis` (Weight: `required`)
-- **Rationale:** A plan built on a false or ungrounded diagnosis will fail during implementation or fix the wrong problem.
-- **Trade-off:** Requires rigorous reading of control steps in the repro evidence block, but prevents wasting engineering effort on non-existent root causes.
-
-### 2. `bounded_scope` (Weight: `required`)
-- **Rationale:** Scope creep introduces unnecessary risk, makes PRs hard to review, and often breaks unrelated components.
-- **Trade-off:** May reject well-intentioned refactorings or infrastructure upgrades bundled into a bug fix, but enforces lean, reviewable, single-purpose changes.
-
-### 3. `executability_and_testability` (Weight: `required`)
-- **Rationale:** A plan must name concrete file targets and provide an observable, decisive test outcome so an engineer or AI agent can build and verify it immediately.
-- **Trade-off:** Expects plans to be concrete rather than exploratory, but guarantees actionable execution boundaries.
-
-### 4. `thread_and_repo_conventions` (Weight: `required`)
-- **Rationale:** Ignores maintainer feedback or violating repository compliance policies (such as AI disclosure rules) leads to rejected PRs and poor community engagement.
-- **Trade-off:** Rejects technically sound plans if communication or policy standards are missed, preserving open-source standards and project compliance.
-
-### Category Floor Coverage
-Together, these four checks provide 100% coverage across all 5 evaluation categories:
-- `clear-accept`: Plans where all 4 checks pass.
-- `wrong-cause`: Caught by `grounded_diagnosis`.
-- `scope-creep`: Caught by `bounded_scope`.
-- `unbuildable`: Caught by `executability_and_testability`.
-- `thread-convention`: Caught by `thread_and_repo_conventions`.
+Related paths: `plan.md` and `eval-run.txt` in this directory; your skill's files in `tools/plan-check/`.

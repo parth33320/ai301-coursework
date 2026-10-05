@@ -1,34 +1,58 @@
 # Voice guide: how I talk upstream
 
-<!--
-THIS IS A CARRY-OVER SLOT, not a new hole. You wrote this guide in
-week 2; paste your filled week-2 voice-guide.md here, whole. It is not
-re-authored and it is not graded as new work this week.
-
-Then reread it with the plan comment in mind. Your claim and repro
-comments promised and reported; a plan comment commits you to an
-approach in front of the people who maintain the code. If your rules
-do not cover that register (for example: how you state an approach you
-are not certain of, or how you respond when a maintainer already
-suggested a direction), extend the guide with what it needs. Extending
-is allowed and encouraged; starting over is not required.
-
-Live mode reads this file before your plan comment goes out and
-reports any rule your draft breaks. Eval mode ignores it entirely,
-because your voice is yours and carries no gold labels.
--->
-
 ## Who I am in threads
 
-<!-- Paste your week-2 section here. -->
+I am an independent developer and open-source contributor investigating reported issues to verify bug behavior and share clear, reproducible findings. I post concise, technical, and modest comments that focus strictly on verified facts, complete reproduction steps, and observable terminal evidence.
 
 ## Rules I write by
 
-<!-- Paste your week-2 rules here, wrong/right pairs and all. Add any
-rule the plan-comment register needs that your week-2 comments did
-not. -->
+### Rule: state_intent_modestly
+
+State reproduction findings or intent to investigate directly and modestly, without making absolute fix promises or over-promising timelines.
+
+- Wrong: "I can fix this issue within 2 days! Please assign this ticket to me immediately."
+- Right: "I was able to reproduce this behavior on v1.4.0 with the attached steps and log output below."
+
+### Rule: attach_evidence_first
+
+Always attach exact commands, environment details, and terminal output logs before asserting a bug outcome or root cause.
+
+- Wrong: "I verified this race condition happens because of debounce timing."
+- Right: "Running `cargo run -- --check` produced the panic trace below on macOS 14.5 (Zsh): [log excerpt]."
+
+### Rule: acknowledge_environment_deltas
+
+Explicitly note any difference between the environment or version used in the test attempt and the original issue report.
+
+- Wrong: "Tested on pandas 1.5.3 and got a ValueError, so this issue is confirmed."
+- Right: "Tested on pandas 1.5.3 (note: issue reported on 2.2.0); the output on 1.5.3 produced: [log excerpt]."
+
+### Rule: disclose_ai_when_required
+
+Include a clear, honest AI assistance disclosure statement whenever the target repository's contribution policy requires it.
+
+- Wrong: "Here are the reproduction steps: [steps]" (on a repository requiring generative AI disclosure like Ghostty or p5.js)
+- Right: "Here are the reproduction steps (note: drafted with AI tool assistance per repository guidelines): [steps]"
+
+
+### Rule: plan_without_overpromising
+
+When posting a plan, state the approach as a plan I intend to follow and name what I am unsure of; never promise a delivery date or guarantee that the approach will work.
+
+- Wrong: "I will have this fixed and merged by Friday, the approach is guaranteed to work."
+- Right: "My plan is to wire `EvalSuite` into `scripts/run_evals.py`. Unknown: whether maintainers want the feedback to come from the real generator with the mock provider; happy to adjust."
+
+### Rule: engage_maintainer_direction
+
+If a maintainer has already suggested a direction or another contributor has an open PR, respond to it in the plan instead of ignoring it.
+
+- Wrong: "Here is my plan." (when a maintainer already asked for a different approach in the thread)
+- Right: "Following @maintainer's suggestion above, I will keep the change to one file and not touch the workflow."
 
 ## Things I never post
 
-<!-- Paste your week-2 list here; extend it if planning tempts you
-toward new ones (overpromised timelines are the classic). -->
+- Generic "+1" or "me too" comments without environment details or reproduction logs.
+- Interchangeable "please assign me" boilerplate promising guaranteed fixes or tight deadlines.
+- Claims of root cause diagnosis or bug confirmation backed only by vibes or unshown local runs.
+- Private monorepo setup links or unshared private configuration references that external maintainers cannot re-run.
+- Plan comments that promise a fix date, guarantee success, or ignore a maintainer's stated direction in the thread.
