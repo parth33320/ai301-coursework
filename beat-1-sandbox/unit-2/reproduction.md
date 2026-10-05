@@ -52,19 +52,19 @@ parth33320
 - I did not check the Makefile or the RAG Evaluation workflow.
 
 ## Run History
-1. Initial calibration run (calib-02) to verify test harness setup.
-2. First full run with initial rubric definitions (14/20 PASS).
-3. Revised rubric checks based on error analysis and edge cases (18/20 PASS).
-4. Final confirmed full run yielding **20/20 PASS** (saved via `--save-run eval-run.txt`).
+1. Full run on the revised rubric: 20/20 agreed, all five categories matched (clear-accept 8/8, disclosure 1/1, no-evidence 4/4, unfollowable-comms 3/3, wrong-target 4/4).
+2. Confirming full run with --save-run: 20/20 again. Saved as eval-run.txt (header hashes: rubric e964e573..., evidence-guide cd623108..., SKILL f1b0abce...).
+No revisions were needed after the first full run.
 
 ## Package Analysis (`pkg-07`)
-- **Candidate Verdict:** `accept`
-- **Gold Verdict:** `accept`
-- **Analysis:** The rubric checks correctly matched the candidate output because the reproduction report successfully captured complete environment specs, clear step-by-step commands, and terminal output matching the gold standard.
+Package: pkg-07
+My rubric's verdict: accept    Gold verdict: accept (gold category: clear-accept)
+Reasoning: All seven required checks passed on specific evidence in the package. environment_recorded passed because the report names p5.js 1.11.7, Chrome 139.0 on macOS 14.6, and explicitly notes the version delta ("The issue was filed against 1.9.4/1.10.0; it is still present on 1.11.7"). followable_and_public_steps and exact_trigger_syntax passed because the report gives a complete sketch loaded from the public CDN and the exact Japanese-first language steps, plus an English-first control run. matching_artifacts_shown passed because the console output shows "TypeError: Cannot read properties of undefined (reading 'replaceAll')", the error the issue describes. repo_ai_disclosure passed because p5.js's policy requires disclosure and the claim comment states that an AI assistant helped organize the report. Since every required check passed, my verdict rule gave accept, matching the gold label. I chose it to show why a package earns accept.
 
 ## Check Rationale
-> `environment_recorded`: "The report explicitly records the operating system, package/tool version, and relevant runtime/driver/environment details." 
-*Rationale:* Essential to prevent false positives by ensuring environment specificity is verifiable.
+Check: specific_modest_claim_comment
+Pass condition as it now reads in rubric.md: "The claim comment is human-voiced, refers to the issue's specifics, and promises only an investigation, not a fix, a date, or "assign me" boilerplate"
+Why it reads this way: [one or two sentences, e.g. it keeps a claim to a promise of investigation, because the house rules ask for a claim that names the issue and doesn't over-promise.]
 
 ## Trade-offs
-Balanced strict checks on environment versions against flexibility on minor local path discrepancies to ensure high reproducibility without penalizing valid multi-platform test environments.
+I worded repo_ai_disclosure to pass when the repo's stated policy requires nothing, and to fail only when the policy requires disclosure and the comments don't disclose. That keeps the check from rejecting good packages on repos with no AI policy, so it doesn't cost any clear-accept packages. The cost is that it can only see a policy stated in the repo-facts block. A repo that expects disclosure only by custom, or in a place the block doesn't quote, would pass when a stricter reviewer would reject. Because all seven checks are required, a single failed check rejects the whole package, so I also accept that one wrong grade on any check flips the verdict.
