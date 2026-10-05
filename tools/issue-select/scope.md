@@ -28,6 +28,12 @@ anyway: course credit attaches to the pull request you open, not to
 whether it merges, so a shared issue costs nobody anything. Everything
 else in the rubric applies as written.
 
+**My own comments.** My GitHub username is `parth33320`. Comments I posted
+on an issue myself (a claim, a reproduction, a plan) are not someone else
+already being on it. I ran this skill after I had started working on
+issue #14, so for the `unclaimed` check ignore every comment authored by
+`parth33320` and grade the claim state as it was before I commented.
+
 ## Your fit profile
 
 <!-- YOU write this part: a few sentences about you. What languages and
