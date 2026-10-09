@@ -1,0 +1,37 @@
+Assignment 4: Test and Submit (unit 4)
+Total Points: 50pts
+
+Required Features
+Skill uploaded to tools/pr-precheck/ — 2pts
+
+SKILL.md filled in tools/pr-precheck/ — 2pts
+
+Rubric in tools/pr-precheck/rubric.md filled in the required format — 4pts
+
+Procedure filled in tools/pr-precheck/procedure.md — 2pts
+
+Evidence guide filled in tools/pr-precheck/references/evidence-guide.md — 1pt
+
+Voice guide present in tools/pr-precheck/ — 1pt
+
+Eval run committed to beat-1-sandbox/unit-4/eval-run.txt — 6pts
+
+Run history listed in pull-request.md — 4pts
+
+Package analysis written in pull-request.md — 4pts
+
+Check rationale quoted in pull-request.md — 4pts
+
+Trade-offs noted in pull-request.md — 2pts
+
+Pull request link recorded in pull-request.md — 2pts
+
+Pull request description names its issue — 2pts
+
+Branch name recorded in pull-request.md — 2pts
+
+Pull request description filled out on GitHub — 4pts
+
+Pull request shows repro and check evidence — 4pts
+
+Pull request diff matches its description and plan — 4pts
