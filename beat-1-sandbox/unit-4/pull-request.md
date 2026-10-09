@@ -15,7 +15,7 @@ label is not graded.
 
 **Pull request**
 
-https://github.com/codepath/pathreview-ai301-fa26-s3/pull/PLACEHOLDER
+https://github.com/codepath/pathreview-ai301-fa26-s3/pull/115
 
 **Branch**
 
