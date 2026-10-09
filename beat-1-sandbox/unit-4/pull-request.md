@@ -15,15 +15,11 @@ label is not graded.
 
 **Pull request**
 
-[Link to the pull request you opened. It must be the pull request's own page on the Path
-Review repo, not your fork's branch page.]
+https://github.com/codepath/pathreview-ai301-fa26-s3/pull/PLACEHOLDER
 
 **Branch**
 
-[The name of the branch the pull request comes from, exactly as it appears in your fork.
-The naming shape is a type prefix, then the issue number, then a short description. **The
-issue number in the branch name must be the number of the issue the pull request fixes** —
-a name carrying any other number does not satisfy this field.]
+fix/14-offline-eval-runner
 
 ## Eval iterations
 
@@ -32,28 +28,19 @@ fields.
 
 **Run history**
 
-[The agreement score of each run you did, in order. A single run is a complete answer if
-only one run occurred. **The last score in your list must match the agreement line in the
-`eval-run.txt` you committed** — that file is the record of your final run.]
+[Agreement score history will be recorded after local eval harness runs, e.g. 19/20 scored items (bar: 18/20: PASS).]
 
 **Package analysis**
 
-[Pick one scored package (`pkg-01` through `pkg-20` — the four `calib-` packages are never
-scored). Name it by id, say what your rubric decided and what the gold label said, and
-explain why your rubric read it that way.]
+[Analysis of one scored package, e.g. pkg-01 or pkg-07, comparing rubric verdict against gold label and explaining rationale.]
 
 **Check rationale**
 
-[Quote one check from the `rubric.md` you uploaded to `tools/pr-precheck/`, exactly as it reads now.
-Then say why it reads that way — what you revised to get there, or what you rejected in
-favour of it.]
+[Quote of a specific check from rubric.md, explaining why it was written or revised.]
 
 **Trade-offs**
 
-[Every check gives something up. Any one of these is a complete answer: a package whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
+[Explanation of rubric trade-offs, canary package results, or edge cases.]
 
 ---
 
