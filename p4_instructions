@@ -1,0 +1,86 @@
+Assignment 4: Test and Submit
+Before you open your PR, read it the way a maintainer will.
+
+🛠️ The work, in order
+Steps 1-7 build and test your skill, 8-12 get your pull request (PR) ready and open it, and 13 submits.
+
+Install your skill: clone your Unit 4 materials (git clone https://github.com/codepath/ai301-unit4-starter.git, or Code, then Download ZIP on the repo page). Copy everything inside the clone's skill/ folder into ~/.claude/skills/pr-precheck/, so SKILL.md ends up at ~/.claude/skills/pr-precheck/SKILL.md (create the folders if they don't exist). Do all your editing in that installed copy from now on, so eval runs and live runs grade with the same files. Then, in the installed scope.md, replace the placeholder on the Repo: line with your Path Review repo.
+
+Your Path Review repo:
+
+codepath/pathreview-ai301-fa26-s3
+Write SKILL.md: this week you write the skill's own instructions too. Read CONTRACT.md first. It's the part that stays fixed: the file layout, the two modes, the accept or reject verdict, and the JSON block every run ends with. Live mode checks your own PR, and eval mode grades a practice submission (one of the frozen PRs in the clone's eval/packages/ folder; the eval harness calls these files packages). Then, using your unit 3 SKILL.md (~/.claude/skills/plan-check/SKILL.md) as a pattern, write instructions to Claude under each heading of the new one. Leave the new file's JSON block exactly as it is. Make sure it says what the skill reads in each mode and when it refuses to grade. In live mode, that's the files the command in step 10 names, the diff from git diff main...HEAD, your issue's thread, and the repo's PR template and docs/CONTRIBUTING.md.
+
+Write your rubric: start from your group's activity worksheet. Every no in its "Files" and "Claims" tables is a problem one of your checks should catch. Put the checks in rubric.md's table (Check, Evidence, Pass condition, Weight), with each Weight either required or preferred. Under it, write a verdict rule that says how the check grades add up to accept or reject, including what an unclear grade does. The practice submissions whose gold label is reject fail in four ways, and the comment in rubric.md explains each one: silent drift, not tested, unreviewable, and standards wall. Make sure your checks cover all four. Missed the activity? Start from your Unit 3 rubric and rewrite each check for a PR.
+
+Write your procedure: start from your Unit 3 procedure.md and rewrite each step for a PR, under the same four headings (Read order, Evidence gathering, Check execution, Verdict assembly). Most steps now compare two things side by side, such as the diff against the plan, the test evidence against the plan's test plan, and the description against the diff.
+
+Write your evidence guide: open a practice submission, such as calib-01.md (they're all in the clone's eval/packages/ folder), next to references/evidence-guide.md, and fill in one heading at a time. Under each heading, write where that evidence lives in a practice submission, where it lives in your own PR (your plan.md, your branch's diff, test_evidence.md from step 8, and pr_draft.md from step 9), and what good looks like.
+
+Copy in your voice guide: run cp ~/.claude/skills/plan-check/voice-guide.md ~/.claude/skills/pr-precheck/voice-guide.md, which replaces the template with your guide. Add rules if a PR title and description need something your comments didn't.
+
+Run the harness: from the clone's eval/ folder, run python3 run_eval.py --skill ~/.claude/skills/pr-precheck --save-run eval-run.txt. This full run grades with your installed copy and saves the results to eval-run.txt in that folder. The table at the end compares each verdict with the gold labels (the staff answer key). Revise your files for the rows marked NO, then re-grade just those practice submissions with --only (the eval README in your Unit 4 materials shows how, and Retries below says what to add when you loosen a check). Keep going until 18 of the 20 agree and every category on the categories: line has at least one match, adding --save-run eval-run.txt to every full run. A partial run never overwrites the file, so it always holds your last full run, and that's the file you submit. The score itself sets no points, so if you run out of time, submit the one you have.
+
+Test your change: no working change from unit 3? A TF gives you the house chain in class (a house issue, its repro pack and plan, and a branch with a working change), or ask in #dts-fa26-ai301-solution-planning on Slack. Use those wherever these steps say yours. From here on, work in the top folder of your fork's clone, on your unit 3 branch.
+
+Run grep -rn "issue #41:" tests, with your issue number in place of 41. If it finds an @pytest.mark.xfail marker, your issue is one of Path Review's seeded bugs, and that marker makes the suite fail once your fix works. Delete each marker it finds, along with any suppression in pyproject.toml that names your issue (Path Review's docs/CONTRIBUTING.md explains why), and commit.
+Run the four checks Path Review's PR template lists: make test-unit, make test-integration, make lint, and make typecheck. Path Review has no integration tests yet, so make test-integration stops with "no tests ran". That's expected, so paste it as is.
+Re-run your unit 2 repro steps, on main for the before (or reuse your unit 2 output) and on your branch for the after.
+Paste all of that output into a new file, test_evidence.md, next to plan.md. A failing check reported honestly, with the reason, still counts as evidence; hiding one doesn't.
+Write your PR description: in a new file, pr_draft.md, next to plan.md, put your PR title on the first line. Under it, paste Path Review's PR template (.github/PULL_REQUEST_TEMPLATE.md in your Path Review repo) and fill in every section:
+
+Summary: what the change does and why.
+Issue: your issue number after Closes #.
+Changes: one bullet per change in your diff.
+Testing: tick only the boxes that are true, and paste your before and after and your checks' results from test_evidence.md. Leave the CI box unticked, because CI only runs after you open the PR, and its result doesn't affect your grade.
+Screenshots / Demo: add one if it helps a reviewer, or write "N/A" and why.
+Notes for Reviewers: say in your own words how you used AI on this change. The course always asks for this disclosure, and the template has no section for it, so it goes here. Also note anything you changed from your plan or left out on purpose.
+Check it with your skill: from the top folder of your fork's clone, on your branch, run claude "pr-precheck: grade my draft PR for issue <URL>: plan in plan.md, the diff on this branch, title and description in pr_draft.md, test evidence in test_evidence.md", with your issue's URL in place of <URL>. "The diff on this branch" is every committed change your branch makes compared with main, which git diff main...HEAD (three dots) shows you. A correct run reads your installed skill's files, prints a per-check summary, and ends with a fenced JSON block whose verdict is accept (ready) or reject (hold). If it stops with a scope message instead, your Repo: line still has the placeholder, so go back to step 1. If you see neither, the skill didn't run.
+
+Fix what your skill finds: remove the debris it flags (debug lines, commented-out code, unrelated edits), fill the gaps in your evidence, and make the description match the diff. Commit each code fix, because step 10 reads only committed changes, but never git add plan.md, comment.md, pr_draft.md, or test_evidence.md. If a fix changes what your plan said, write what changed and why under ## Deviations in plan.md, because graders read your diff against that file. Re-run step 10 until the verdict is accept, or until every fail left is one your description discloses. Before you push, git diff main...HEAD --stat should list only the files your fix changes.
+
+Open your PR: check your branch name first. It needs a type prefix (fix/, docs/, feat/, test/, refactor/, perf/, or chore/), the issue number, and a short description, like fix/1234-null-check. If it doesn't match, rename it with git branch -m <new-name>. Then push your branch to your fork (git push -u origin <your-branch-name>). On your fork's GitHub page, click Compare & pull request, or open Pull requests, then New pull request. Set the base repository to your Path Review repo and the base branch to main. Replace GitHub's pre-filled template with the title and description from pr_draft.md, then click Create pull request.
+
+Submit: in your course repo, upload everything in ~/.claude/skills/pr-precheck/ into tools/pr-precheck/, including the references folder itself, so evidence-guide.md stays inside it. Upload eval-run.txt (from the clone's eval/ folder) into beat-1-sandbox/unit-4/. Both use the same Add file, then Upload files flow as unit 3. If you added deviations in step 11, upload the new plan.md into beat-1-sandbox/unit-3/ too. Fill in beat-1-sandbox/unit-4/pull-request.md: the link to your PR's own page on Path Review (not your fork's branch page), your branch name, and the four eval fields. Then submit your course repo link on this tab.
+
+Path Review's house rules allow one PR per issue, per student. A classmate's PR on the same issue doesn't block yours, so open your own.
+📦 What you submit
+Your course repo link, through the course portal. It is the same link every week, with this unit's additions in place.
+
+❗ IMPORTANT: Submit a link to your entire repo, not just a folder. (What does this mean?)
+Three places in it carry this unit's work:
+
+tools/pr-precheck/: every file from your installed copy. That's your SKILL.md, rubric.md, procedure.md, references/evidence-guide.md, and carried-over voice-guide.md, plus CONTRACT.md and scope.md (those two aren't graded, but include them so the folder arrives whole).
+beat-1-sandbox/unit-4/pull-request.md: the fields listed in step 13. The four eval fields (Run history, Package analysis, Check rationale, Trade-offs) explain how your skill got to the run in eval-run.txt.
+beat-1-sandbox/unit-4/eval-run.txt: the file your last full run wrote with --save-run (step 7). Its header records the model, your skill, and a fingerprint of each file in the run, so never hand-edit it. Your Run history field is where you account for the runs it took.
+🎯 The points
+This assignment is worth 50 points, twice the earlier units, because you build the whole skill and open your first PR. The full rubric is on the Grading Rubrics page under Course Info. In short: your skill's files carry 12 points, the eval run and write-up 20, and your PR 18. The 20 eval points split two ways:
+
+6 for committing one complete run, written by the harness. A partial run, or none, earns 0.
+14 across four separate fields in beat-1-sandbox/unit-4/pull-request.md, each scored on its own:
+Run history (4): every run's score in order, ending with the score in your eval-run.txt.
+Package analysis (4): one scored practice submission named by id (such as pkg-07), with both verdicts and your reasoning.
+Check rationale (4): one check quoted as it now reads, matching the file you uploaded, and why it reads that way.
+Trade-offs (2).
+If your first full run agrees on all 20, that one run is a complete Run history. For Package analysis, the practice submission you pick doesn't have to be one your rubric got wrong. Name it, give your rubric's verdict and the gold label, and explain why your rubric decided that way.
+
+Why 18 of 20 (a number to aim at, not a grade tier): 16 of the 20 scored practice submissions have clear signals a reasonable rubric should never miss, and 4 are genuinely arguable. The category floor (every category needs at least one match) matters most for the standards-wall category, which has only 2 practice submissions (PRs that skip something the repo's PR template or AI policy requires). A rubric that never checks the repo's stated asks will miss both, and getting the other 18 right can't make up for it. The 4 calibration practice submissions (calib-01 to calib-04) are never scored. If a category ends up with no matches, that's the best thing to write about in your eval fields, because it shows a kind of problem your rubric can't see.
+
+The 18 PR points split six ways:
+
+2 for opening it on your Path Review repo.
+2 for naming its issue in the description.
+2 for a branch name with a type prefix, the issue number, and a short description, like fix/1234-null-check.
+4 for a description with every section filled in, including the AI-use disclosure.
+4 for evidence in the description: your repro steps re-run with the before and after, plus the repo's own checks with their results.
+4 for a faithful PR. The description matches the diff, every change is in your plan or its Deviations, and the diff has no debris.
+An honestly disclosed shortfall keeps its faithfulness points. If your PR leaves something out, or your fix needed a change the plan didn't name, and the description and plan.md say so, you keep all 4. A diff that quietly does more or less than the plan gets 0. An unrelated change, like a cleanup the issue doesn't need, costs 2 even when you explain it. Your PR is graded as you opened it, so review comments, a merge, or a close afterward never change a score. The house chain is graded on the same criteria.
+
+🔁 Retries
+Unlimited before the deadline. A full eval run costs about $5 of your course credit, so don't use full runs to revise. After a full run, re-grade only the practice submissions you disagreed on, for example --only pkg-07,pkg-12 (about $0.25 each), and save full runs for when you think your files are ready. Partial runs never count as your submitted run, and they can't tell you whether you've reached 18 of 20 with every category matched. Loosening a check can flip a practice submission that agreed before, so when you loosen one, add a canary to your --only list: one practice submission from each small category the change could affect (the eval README shows how).
+
+🏁 Sandbox exit
+This assignment can finish your sandbox checklist. That means an eval run with at least 18 of 20 agreeing and every category matched for all four skills (issue-select, repro-check, plan-check, and pr-precheck). It also means full points on your posted comments (unit 2), your plan and branch (unit 3), and this PR. You can finish them in any order, and all of them stay open until the end of the term. Keep tools/pr-precheck/ in your course repo, because unit 7's ship-gate wraps this same skill.
+
+⏰ Deadline
+Due: Monday, October 12th at 2:59AM EDT
