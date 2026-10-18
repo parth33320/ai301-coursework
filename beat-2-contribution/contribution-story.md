@@ -57,8 +57,14 @@ one in the week it belongs to.
 
 **Unit 5: [one line on the tool work]**
 
-[2-4 sentences: what you built (the scout, your strategy), what broke
-or fell short, what changed because of it.]
+**Toolkit**
+
+- Tool: Issue scout skill overlay (`~/.claude/skills/issue-scout/`) and GitHub CLI (`gh search issues`)
+- What it produced: A configured real-world issue scout setup with custom `gh search issues` strategies targeting Python and CLI issues, complete with local candidate scans and upstream claim comments.
+- Difficulties: Overlay installation cleared out required dependency files (`rubric.md` and `evidence-guide.md`) in the global skill directory, causing initial scan evaluation errors.
+- What changed: Restored the missing rubric and evidence files by pulling them from the coursework repository's `tools/issue-select/` history and successfully re-ran scans to identify valid open-source candidate issues.
+
+Configured the real-world issue scout skill with custom search strategies targeting Python backend and evaluation projects. Encountered missing dependency files during the overlay setup and terminal path mismatches. Restored the necessary rubric and evidence guides from project backups, enabling successful scans and evaluation of target issues.
 
 **Unit 6: [one line on the tool work]**
 
