@@ -39,8 +39,6 @@ fill it there):
 ```text
 **Toolkit**
 
-- Tool: [which tool did this phase's work, and how you used it]
-- What it produced: [described in a sentence or a short excerpt]
-- Difficulties: [what fought you or fell short, or "none met"]
-- What changed: [the patch, revision, or workaround, what you would
-  update, or "nothing"]
+-Tool: Issue scout skill overlay (~/.claude/skills/issue-scout/) and GitHub CLI (gh search issues)   
+-What it produced: A configured real-world issue scout setup with custom gh search issues strategies targeting Python and CLI issues, complete with local candidate scans and upstream claim comments.   Difficulties: Overlay installation cleared out required dependency files (rubric.md and evidence-guide.md) in the global skill directory, causing initial scan evaluation errors.   
+-What changed: Restored the missing rubric and evidence files by pulling them from the coursework repository's tools/issue-select/ history and successfully re-ran scans to identify valid open-source candidate issues.   
