@@ -2,7 +2,7 @@ Student: Parth Patel
 
 ## Featured Tools
 
-Throughout this capstone term, my focus centered on building robust diagnostic and verification tooling to track down elusive session management bugs and ensure merge readiness. I chose three primary tools for this portfolio: the **issue-scout**, the **repro-check**, and the **pr-precheck**. These tools evolved directly from initial repository triage all the way through automated garbage-collection test harnesses and branch validation gates. Each one captures a distinct phase of the open-source contribution lifecycle, moving from static issue evaluation to dynamic session safety checks under concurrency.
+Throughout this capstone term, my focus centered on building robust diagnostic and verification tooling to track down elusive session management bugs and ensure merge readiness. I chose three primary tools for this portfolio: the **issue-scout**, the **repro-check**, and the **pr-precheck**. These tools evolved directly from initial repository triage all the way through automated garbage-collection test harnesses and branch validation gates. Each one captures a distinct phase of the open-source contribution lifecycle, moving from static issue evaluation to dynamic session safety checks under concurrency. 
 
 ### issue-scout
 *What it is, and the judgment hole I wrote:* A structured triage playbook and rubric designed to evaluate candidate repository issues, estimating complexity, codebase touchpoints, and potential architectural risks before committing to a claim.
