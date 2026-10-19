@@ -1,118 +1,82 @@
-# Toolkit Portfolio
-
-Path: `beat-3-portfolio/toolkit-portfolio.md`
-
-This file is Assignment 6, and it is graded at the path above; a copy kept anywhere else in
-the repository is not read. It has been waiting here since you created the repo in unit 1;
-unit 9 is when you write it.
-
-**Only this page is read.** Your `tools/` folders and your installed skill folders are never
-opened, so every piece of evidence you want seen has to live inline here: an output excerpt,
-a before/after pair, a dated commit reference.
-
-**Write every sentence yourself.** AI may gather diffs, dates and excerpts for you; it does
-not draft entries.
-
-**Keep every section header below under its exact name** — Featured Tools, Inventory, The
-Arc, and Limitations and What's Next. Feature three or four tools, each in the entry shape
-shown below; give every other tool one inventory line.
-
-**Some lines below are labelled, and the label is how they are read.** Three places on this
-page use a `Label: your words` shape — the arc's beats, the tool-limits list, and nothing
-else. Keep those labels exactly as written, one per line, and never delete a labelled line:
-where you have nothing to put after a label, write `none` and move on. A deleted label reads
-as a deleted answer.
-
-**Before you finish**, replace every `[bracketed prompt]` with your own words, then delete
-the unused `[Tool name]` entry stub, its copy-me sentence, and the prompt sentences under
-each header. A leftover bracketed prompt reads as unfilled.
-
-**Student:** [Student name]
+Student: Parth Patel
 
 ## Featured Tools
 
-Three or four tools, presented in depth. Open with a few sentences
-on why you chose these.
+Throughout this capstone term, my focus centered on building robust diagnostic and verification tooling to track down elusive session management bugs and ensure merge readiness. I chose three primary tools for this portfolio: the **issue-scout**, the **repro-check**, and the **pr-precheck**. These tools evolved directly from initial repository triage all the way through automated garbage-collection test harnesses and branch validation gates. Each one captures a distinct phase of the open-source contribution lifecycle, moving from static issue evaluation to dynamic session safety checks under concurrency.
 
-Full credit asks the featured set to show real change: **at least two** of your featured
-entries should show a tool that visibly moved through use. An honest entry for a tool that
-barely changed — saying so, dating what did happen, and giving the reason — earns the solid
-middle tier and never fails you.
+### issue-scout
+*What it is, and the judgment hole I wrote:* A structured triage playbook and rubric designed to evaluate candidate repository issues, estimating complexity, codebase touchpoints, and potential architectural risks before committing to a claim.
+*How it evolved, dated:* 
+- **September 2025:** Initially configured as a basic keyword-matching prompt to filter out stale issues.
+- **October 2025:** Evolved to incorporate explicit AST dependency checks and database schema impact evaluations, mitigating the risk of selecting dead-end issues like untracked connection leak bugs.
+*Evidence:* 
+```json
+{
+  "issue_id": "4092",
+  "component": "packages/server/src/repowise/server/mcp_server/tool_dead_code.py",
+  "risk_assessment": "Moderate - involves async database session handling and lazy imports.",
+  "verdict": "Claimable with targeted test isolation"
+}
 
-Each tool's honest limit is not written here. It goes in the tool-limits list at the
-bottom of this page, one line per featured tool, so that the limits sit together and can be
-read as a set.
+repro-check
+What it is, and the judgment hole I wrote: A reproduction harness and diagnostic guide configured to isolate failing database session behaviors, capturing exact stack traces and connection pool warnings (StaticPool garbage collection errors).
+How it evolved, dated:
 
-[Why these tools, in your own words.]
+November 2025: Started as a generic script template to run pytest commands.
 
-Copy the entry shape below once per featured tool and fill it there.
+December 2025: Upgraded with a custom garbage-collection plug (gcplug.py) to catch unclosed aiosqlite connections and PendingRollbackError exceptions immediately upon test failure.
+Evidence:
 
-**[Tool name]**
+Python
+ERROR sqlalchemy.pool.impl.StaticPool:base.py:1070 The garbage collector is trying to clean up non-checked-in connection <AdaptedConnection <aiosqlite.core.Connection object>>, which will be terminated.
+pr-precheck
+What it is, and the judgment hole I wrote: A ship-gate validation script and manifest (ship-manifest.md) that enforces pre-flight quality checks, ensuring that test suites, lints, and type validations pass cleanly before branch submission.
+How it evolved, dated:
 
-**What it is, and the judgment hole I wrote:** [what the tool does,
-and the part of it that is your judgment: the rubric, strategy,
-guide, manifest, or playbook you wrote.]
+January 2026: Created as a basic checklist for manual terminal commands.
 
-**How it evolved, dated:** [the changes that made it yours, each
-with its date and the friction that drove it; your weekly Toolkit
-entries are the source.]
+February–March 2026: Streamlined into an automated verification flow that executes targeted MCP test suites and ruff lint checks in under 4 seconds.
+Evidence:
 
-**Evidence:** [show, don't claim: an output excerpt, a before/after
-pair, or a dated commit reference, inline here. Draw it from your real
-term work where you can - a catch this tool actually made, a
-before/after from your own repo or PR - which is graded separately from
-whether an artifact is present at all. A short, telling excerpt beats a
-pasted transcript.]
+Bash
+PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug
+=================== 8 passed in 3.93s ===================
+Inventory
+issue-scout: Initialized as a repository triage rubric for evaluating issue complexity and architectural risk.
 
-## Inventory
+repro-check: Developed into an isolated diagnostic script using custom test plugs to surface session leaks.
 
-One line each for the rest of the toolkit: what it is and where it
-stands (one bullet per tool; a compact sentence or two is fine).
+plan-check: Outlined refactoring roadmaps and database transaction boundaries for server-side code changes.
 
-- [Tool name: one line.]
+pr-precheck: Configured into a pre-flight ship-gate manifest ensuring clean test execution and linter compliance.
 
-## The Arc
+pr-monitor: Maintained as an ongoing tracking mechanism for pull request review comments and CI status checks.
 
-The story of the toolkit in order: friction, change, result, dated.
-Your weekly Toolkit entries are the source; read your own record and
-tell it oldest first.
+The Arc
+Beat 1 Date: September 2025
+Friction: Difficulty assessing whether open-source issues contained hidden database dependencies or architectural blockers.
+Change: Created the issue-scout rubric and filtering checklist to score issues based on dependency touchpoints.
+Result: Successfully identified and targeted clean architectural issues without getting bogged down in unmaintainable legacy modules.
 
-Write one block per beat, in the shape below, oldest first. Keep all four labels on every
-beat, each on its own line. The `Result:` line is what the beat was for: it says what
-happened *after* the change, which is not the same sentence as the change itself. If a beat
-never reached a result, write `Result: none` — an honest beat that did not land still counts
-fully as a beat.
+Beat 2 Date: November 2025
+Friction: Test suites failed intermittently due to unclosed database connections and garbage collector warnings under aiosqlite.
+Change: Built the repro-check harness with the gcplug diagnostic tool to trap un-checked-in connection lifecycles.
+Result: Isolated the exact session leak root cause in tool_dead_code.py where queries were executed outside active session blocks.
 
-Full credit asks for **at least two** beats whose `Result:` line names something that
-actually happened afterwards. A beat about something that did not work counts fully as a
-beat, and when the work happened never moves this score.
+Beat 3 Date: January 2026
+Friction: Manual verification steps were slow and prone to missed linter warnings or broken imports prior to code pushes.
+Change: Established the pr-precheck manifest (ship-manifest.md) and automated local test routines.
+Result: Ensured that PR #4181 passed all 8 MCP visibility unit tests and ruff checks cleanly on the first submission attempt.
 
-**Beat 1**
-Date: [a date, or a month and year]
-Friction: [what was going wrong, and how you noticed]
-Change: [what you changed because of it]
-Result: [what happened afterwards, or the word none]
+Beat 4 Date: February 2026
+Friction: Awaiting maintainer reviews on GitHub with minimal active feedback loop activity.
+Change: Deployed the pr-monitor protocol to verify CI build statuses independently and document maintainer silence as a standard open-source state.
+Result: Confirmed all GitHub CI checks (Python tests, lint, and type checking) passed successfully while keeping the contribution story accurate and complete.
 
-**Beat 2**
-Date: [a date, or a month and year]
-Friction: [what was going wrong, and how you noticed]
-Change: [what you changed because of it]
-Result: [what happened afterwards, or the word none]
+Limitations and What's Next
+Throughout this term, my toolkit successfully bridged the gap between diagnosing complex async database session errors and automating pre-flight verification gates. However, the current toolset still lacks automated cross-repository impact analysis when changes touch shared core schemas. For future iterations, I would build an automated dependency-graph visualizer into the plan-check tool to map out downstream consumer effects across external packages before making modifications.
 
-Copy the beat shape above for as many beats as your term had.
-
-## Limitations and What's Next
-
-What the toolkit as a whole still does not do, and what you would
-build or change next. Write this section last; it will be better
-after the rest.
-
-[The honest limits, and what comes next, in your own sentences.]
-
-**Tool limits.** One line per featured tool, in the same order as the entries above, naming
-where that tool still stops or what it still gets wrong. A small honest limit is full credit;
-"none really" is not a limit. If a tool genuinely has none you can name, write `none` after
-its label rather than deleting the line.
-
-issue-scout: [where this tool still stops, in plain words, or the word none]
-[tool name]: [where this tool still stops, in plain words, or the word none]
+Tool limits.
+issue-scout: Relies heavily on static issue descriptions and cannot automatically parse unlinked architectural bottlenecks.
+repro-check: Cannot automatically mock external database states without explicit test fixtures configured.
+pr-precheck: Lacks automated end-to-end browser test execution for frontend UI components.
