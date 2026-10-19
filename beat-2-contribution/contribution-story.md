@@ -11,7 +11,7 @@ files and no evidence uploads are part of Assignment 5.
 **Student:** Parth Patel
 **GitHub Username:** parth33320
 **Issue:** https://github.com/repowise-dev/repowise/issues/4092
-**Pull Request:** [GitHub PR link, once opened]
+**Pull Request:** https://github.com/repowise-dev/repowise/pull/4181
 
 One repository, built across units 5 to 8, telling the whole story of your real
 contribution. Fill it as you work, not at the end — the sections below ask for evidence that
@@ -224,7 +224,7 @@ Difficulties: None.
 What changed: Applied the session context correction cleanly.
 
 Pull Request
-PR Link: [GitHub PR URL when opened]
+PR Link: https://github.com/repowise-dev/repowise/pull/4181
 
 PR Description: Fixes Issue #4092 by ensuring call_resolution_bases is queried within the active async with get_session(...) block inside get_dead_code (packages/server/src/repowise/server/mcp_server/tool_dead_code.py). This prevents closed-session autobegin behavior, eliminates pooled connection leaks during garbage collection, and resolves test flakiness in test_finding_registry_visibility.py.
 
