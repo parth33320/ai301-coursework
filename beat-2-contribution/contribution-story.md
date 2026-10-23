@@ -7,7 +7,7 @@ the repository is not read. **Keep every section header below under its exact na
 format criteria grade exactly that. Your course repo link is the whole submission: no tool
 files and no evidence uploads are part of Assignment 5.
 
-**Contribution Number:** [1]
+**Contribution Number:** 1
 **Student:** Parth Patel
 **GitHub Username:** parth33320
 **Issue:** https://github.com/repowise-dev/repowise/issues/4092
@@ -39,9 +39,11 @@ fill it there):
 ```text
 **Toolkit**
 
--Tool: Issue scout skill overlay (~/.claude/skills/issue-scout/) and GitHub CLI (gh search issues)   
--What it produced: A configured real-world issue scout setup with custom gh search issues strategies targeting Python and CLI issues, complete with local candidate scans and upstream claim comments.   Difficulties: Overlay installation cleared out required dependency files (rubric.md and evidence-guide.md) in the global skill directory, causing initial scan evaluation errors.   
--What changed: Restored the missing rubric and evidence files by pulling them from the coursework repository's tools/issue-select/ history and successfully re-ran scans to identify valid open-source candidate issues.   
+- Tool: [which tool did this phase's work, and how you used it]
+- What it produced: [described in a sentence or a short excerpt]
+- Difficulties: [what fought you or fell short, or "none met"]
+- What changed: [the patch, revision, or workaround, what you would
+  update, or "nothing"]   
 
 Configured the real-world issue scout skill with custom search strategies targeting Python backend and evaluation projects. Encountered missing dependency files during the overlay setup and terminal path mismatches. Restored the necessary rubric and evidence guides from project backups, enabling successful scans and evaluation of target issues.   
 
