@@ -1,86 +1,97 @@
-Student: Parth Patel
+# Toolkit Portfolio
+
+Path: `beat-3-portfolio/toolkit-portfolio.md`
+
+This file is Assignment 6, and it is graded at the path above; a copy kept anywhere else in
+the repository is not read.
+
+**Student:** Parth Patel
 
 ## Featured Tools
 
-Throughout this capstone term, my focus centered on building robust diagnostic and verification tooling to track down elusive session management bugs and ensure merge readiness. I chose three primary tools for this portfolio: the **issue-scout**, the **repro-check**, and the **pr-precheck**. These tools evolved directly from initial repository triage all the way through automated garbage-collection test harnesses and branch validation gates. Each one captures a distinct phase of the open-source contribution lifecycle, moving from static issue evaluation to dynamic session safety checks under concurrency. 
+My contribution this term centred on a single real bug: an async database session leak that caused intermittent test failures in a Python MCP server. I chose to feature issue-scout, repro-check, and pr-precheck because each one did visible, datable work on that contribution and changed in response to friction I actually hit. The arc from issue selection through pre-flight gate is the clearest through-line my toolkit has, and these three tools carry it.
 
-### issue-scout
-*What it is, and the judgment hole I wrote:* A structured triage playbook and rubric designed to evaluate candidate repository issues, estimating complexity, codebase touchpoints, and potential architectural risks before committing to a claim.
-*How it evolved, dated:* 
-- **September 2025:** Initially configured as a basic keyword-matching prompt to filter out stale issues.
-- **October 2025:** Evolved to incorporate explicit AST dependency checks and database schema impact evaluations, mitigating the risk of selecting dead-end issues like untracked connection leak bugs.
-*Evidence:* 
-```json
-{
-  "issue_id": "4092",
-  "component": "packages/server/src/repowise/server/mcp_server/tool_dead_code.py",
-  "risk_assessment": "Moderate - involves async database session handling and lazy imports.",
-  "verdict": "Claimable with targeted test isolation"
-}
+**issue-scout**
 
-repro-check
-What it is, and the judgment hole I wrote: A reproduction harness and diagnostic guide configured to isolate failing database session behaviors, capturing exact stack traces and connection pool warnings (StaticPool garbage collection errors).
-How it evolved, dated:
+**What it is, and the judgment hole I wrote:** A triage playbook and rubric I configured to evaluate candidate open-source issues, scoring them on maintainer activity, scope feasibility, and dependency risk. The judgment hole is the rubric: I wrote the checks that decide whether an issue is a reasonable first-contribution target given my profile.
 
-November 2025: Started as a generic script template to run pytest commands.
+**How it evolved, dated:** In October 2026, my initial rubric had a scope check that was too strict — it rejected most real-world issues because their scope descriptions were vaguer than the sandbox packages. I replaced it with the `scope-feasible` row from the Unit 6 patch kit, which adds a difficulty-note output instead of a binary reject. I also added a dated note to `scan-notes.md` flagging that the scout had no signal for missing test dependencies, after the pytest-asyncio gap in the repowise environment cost me an hour during reproduction.
 
-December 2025: Upgraded with a custom garbage-collection plug (gcplug.py) to catch unclosed aiosqlite connections and PendingRollbackError exceptions immediately upon test failure.
-Evidence:
+**Evidence:** The scout's verdict on Issue #4092 (accept, moderate difficulty) pointed directly at the session boundary risk and named `tool_dead_code.py` as the affected file, which matched the actual root cause exactly. Before the scope patch, the same issue would have been rejected because the issue description said "investigate the session lifecycle" without naming a specific line count.
 
-Python
-ERROR sqlalchemy.pool.impl.StaticPool:base.py:1070 The garbage collector is trying to clean up non-checked-in connection <AdaptedConnection <aiosqlite.core.Connection object>>, which will be terminated.
-pr-precheck
-What it is, and the judgment hole I wrote: A ship-gate validation script and manifest (ship-manifest.md) that enforces pre-flight quality checks, ensuring that test suites, lints, and type validations pass cleanly before branch submission.
-How it evolved, dated:
+---
 
-January 2026: Created as a basic checklist for manual terminal commands.
+**repro-check**
 
-February–March 2026: Streamlined into an automated verification flow that executes targeted MCP test suites and ruff lint checks in under 4 seconds.
-Evidence:
+**What it is, and the judgment hole I wrote:** A reproduction harness and grading rubric that checks whether a reproduction report is complete enough to post upstream. My judgment hole is the rubric's evidence checks: I wrote the pass conditions for environment specificity, step followability, and honest claim-matching.
 
-Bash
+**How it evolved, dated:** In October 2026 (Unit 6), I added the `gcplug.py` garbage-collection plugin to force deterministic GC sweeps during test execution, because the session leak only surfaced non-deterministically without it. Before the plugin, the reproduction was environment-dependent and would have failed the `followable_and_public_steps` check. After adding it, every run reproduced the `PendingRollbackError` within the first GC sweep.
+
+**Evidence:**
+```
+ERROR sqlalchemy.pool.impl.StaticPool:base.py:1070 The garbage collector is trying
+to clean up non-checked-in connection <AdaptedConnection <aiosqlite.core.Connection
+object>>, which will be terminated.
+sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is
+rolled back.
+```
+This output — captured from `PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug` on my fork — is the exact failing behavior the issue reported, produced deterministically.
+
+---
+
+**pr-precheck**
+
+**What it is, and the judgment hole I wrote:** A ship-gate validation script and manifest (`ship-manifest.md`) that enforces pre-flight checks before a branch is submitted as a PR. My judgment hole is the manifest: I wrote the rows that decide which checks must pass, with dated reasons for anything excluded.
+
+**How it evolved, dated:** In October 2026 (Unit 7), I created the initial manifest with three rows: MCP visibility tests, ruff lint, and mypy type check. The ruff check initially flagged a line-length warning in my patch file; I fixed it and added a note to the manifest that line-length warnings are blocking, not advisory. The gate then passed cleanly.
+
+**Evidence:**
+```
 PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug
 =================== 8 passed in 3.93s ===================
-Inventory
-issue-scout: Initialized as a repository triage rubric for evaluating issue complexity and architectural risk.
+```
+Gate ran on branch `fix/issue-4092`, October 2026. Zero connection leak warnings, zero `PendingRollbackError` exceptions.
 
-repro-check: Developed into an isolated diagnostic script using custom test plugs to surface session leaks.
+## Inventory
 
-plan-check: Outlined refactoring roadmaps and database transaction boundaries for server-side code changes.
+- **plan-check:** Used to grade my implementation plan before posting the plan comment on Issue #4092; helped confirm that `call_resolution_bases` scope was correctly bounded to the session block.
+- **pr-monitor:** Deployed in Unit 8 to check PR #4181 state; confirmed CI passing and no maintainer feedback within the first week; held back a nudge per my 7-day threshold rule.
 
-pr-precheck: Configured into a pre-flight ship-gate manifest ensuring clean test execution and linter compliance.
+## The Arc
 
-pr-monitor: Maintained as an ongoing tracking mechanism for pull request review comments and CI status checks.
-
-The Arc
-
-Beat 1
-Date: September 2026
-Friction: Difficulty assessing whether open-source issues contained hidden database dependencies or architectural blockers.   Change: Created the issue-scout rubric and filtering checklist to score issues based on dependency touchpoints.
-Result: Successfully identified and targeted clean architectural issues without getting bogged down in unmaintainable legacy modules.
-
-Beat 2
-Date: September 2026
-Friction: Test suites failed intermittently due to unclosed database connections and garbage collector warnings under aiosqlite.
-Change: Built the repro-check harness with the gcplug diagnostic tool to trap un-checked-in connection lifecycles.
-Result: Isolated the exact session leak root cause in tool_dead_code.py where queries were executed outside active session blocks.
-
-Beat 3
+**Beat 1**
 Date: October 2026
-Friction: Manual verification steps were slow and prone to missed linter warnings or broken imports prior to code pushes.
-Change: Established the pr-precheck manifest (ship-manifest.md) and automated local test routines.
-Result: Ensured that PR #4181 passed all 8 MCP visibility unit tests and ruff checks cleanly on the first submission attempt.
+Friction: My issue-scout scope check was too strict for real-world issues — it rejected Issue #4092 because the description said "investigate" rather than naming a specific line count, even though the issue was actually well-scoped.
+Change: Applied the `scope-feasible` patch from Unit 6 materials, replacing the binary scope check with one that emits a difficulty note.
+Result: The scout accepted Issue #4092 with a moderate-difficulty note, and I was able to claim it with confidence.
 
-Beat 4
+**Beat 2**
 Date: October 2026
-Friction: Awaiting maintainer reviews on GitHub with minimal active feedback loop activity.
-Change: Deployed the pr-monitor protocol to verify CI build statuses independently and document maintainer silence as a standard open-source state.
-Result: Confirmed all GitHub CI checks (Python tests, lint, and type checking) passed successfully while keeping the contribution story accurate and complete.   
+Friction: The session leak in `get_dead_code` only surfaced non-deterministically in CI, making it hard to reproduce locally without a forcing function. Standard pytest runs passed most of the time.
+Change: Added the `gcplug.py` garbage-collection plugin from the issue's repro guide, forcing GC sweeps between test blocks to expose unclosed sessions deterministically.
+Result: Every local run reproduced the `PendingRollbackError` within seconds, giving me concrete terminal output to attach to the PR description.
 
-Limitations and What's Next
-Throughout this term, my toolkit successfully bridged the gap between diagnosing complex async database session errors and automating pre-flight verification gates. However, the current toolset still lacks automated cross-repository impact analysis when changes touch shared core schemas. For future iterations, I would build an automated dependency-graph visualizer into the plan-check tool to map out downstream consumer effects across external packages before making modifications.
+**Beat 3**
+Date: October 2026
+Friction: The pr-precheck gate flagged a ruff line-length warning in my patch file that I hadn't noticed during manual review.
+Change: Fixed the line-length issue and added a manifest note that ruff warnings are blocking.
+Result: Gate passed on the next run; PR #4181 opened with a clean gate log and all 8 tests green.
 
-Tool limits.
-issue-scout: Relies heavily on static issue descriptions and cannot automatically parse unlinked architectural bottlenecks.
-repro-check: Cannot automatically mock external database states without explicit test fixtures configured.
-pr-precheck: Lacks automated end-to-end browser test execution for frontend UI components.
+**Beat 4**
+Date: October 2026
+Friction: After opening PR #4181, I had no signal on whether to follow up with maintainers or wait.
+Change: Ran the pr-monitor playbook to read CI status and draft a potential nudge; my 7-day threshold rule held the draft back.
+Result: Confirmed all CI checks passing and documented maintainer silence as a normal open-source state in the PR section of my contribution story.
+
+## Limitations and What's Next
+
+The toolkit handles the single-issue contribution loop well, but it has gaps when the problem space is larger. The issue-scout has no signal for repositories where the test setup requires a non-obvious plugin or environment variable — the pytest-asyncio gap I hit this term is a direct example. I would add a "test-setup complexity" signal that scores how much setup the repo's `CONTRIBUTING.md` describes before running tests.
+
+The repro-check rubric is still manually driven; it cannot automatically compare a candidate's terminal output against the issue's expected output. A structured output-diff check would cut the back-and-forth during calibration runs.
+
+The pr-precheck manifest is per-repo, which means starting from scratch for every new contribution. I would build a base manifest template with the most common check patterns (lint, type check, targeted test module) pre-filled.
+
+**Tool limits.**
+issue-scout: Cannot detect missing test dependencies or non-obvious environment setup requirements from issue descriptions alone.
+repro-check: Cannot automatically diff candidate terminal output against the issue's expected failure output; comparison is manual.
+pr-precheck: Manifest is per-repo and starts from scratch each contribution; no reusable base template exists yet.
