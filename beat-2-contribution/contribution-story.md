@@ -110,10 +110,10 @@ Executing a query on a closed SQLAlchemy `AsyncSession` auto-begins a new transa
 
 **Toolkit**
 
-- Tool: Repository code inspector and search tools
-- What it produced: Exact localization of the session lifecycle mismatch between the context manager exit and the deferred query call
-- Difficulties: Tracing deferred execution paths across asynchronous helper functions
-- What changed: Nothing; the code path was clearly mapped by the issue description
+- Tool: Repository code inspector and search tools (`grep`, GitHub code search, VS Code Codespaces)
+- What it produced: Exact localization of the session lifecycle mismatch — confirmed that `call_resolution_bases` in `_basis.py` issues a live `session.execute()` call rather than reading already-fetched data, which meant moving it inside the block was the correct fix
+- Difficulties: The function name `call_resolution_bases` didn't make it obvious whether it queries the session or just processes in-memory data; I had to trace the call into `_basis.py` across two files to confirm it issues a live `session.execute()` call
+- What changed: Nothing in the rubric; the extra tracing step confirmed the diagnosis rather than changing it
 
 ---
 
@@ -177,9 +177,9 @@ Move the invocation of `call_resolution_bases` directly inside the active `async
 **Toolkit**
 
 - Tool: Python editor and refactoring tools in VS Code Codespaces
-- What it produced: A clean, localized code patch within `tool_dead_code.py`
-- Difficulties: Ensuring asynchronous context variable scopes remained intact
-- What changed: Relocated the query call entirely inside the existing context manager block
+- What it produced: A two-line patch in `tool_dead_code.py`: added `call_resolution_basis = await call_resolution_bases(session, ...)` inside the `with` block at line ~296, and replaced the original inline call at line ~351 with `summary["call_resolution_basis"] = call_resolution_basis`
+- Difficulties: Moving the call inside the `with` block required introducing a new local variable (`call_resolution_basis`) to carry the result out of the block to the summary assignment ~55 lines later; I verified Python's scoping rules don't restrict local variables to the `with` block before committing
+- What changed: Introduced the `call_resolution_basis` local variable to bridge the gap between the session block and the summary assignment
 
 ---
 
@@ -242,15 +242,15 @@ Investigated Issue #4092 and reproduced the pooled connection leak using the gcp
 
 **Technical Skills Gained**
 
-Gained deep practical understanding of SQLAlchemy `AsyncSession` lifecycle management, particularly how closed sessions handle deferred `execute()` calls by auto-beginning transactions and checking out pooled connections (`StaticPool`), and how asynchronous garbage collection finalizers interact with unmanaged database handles.
+Before this contribution I understood SQLAlchemy sessions conceptually; after it I understood the exact moment a closed `AsyncSession` auto-begins a transaction (`execute()` on a closed session), why that checks out a `StaticPool` connection that is never returned, and why the GC finalizer then terminates the connection rather than rolling it back. The `gcplug.py` plugin was the concrete tool that made this visible — without it, the leak was non-deterministic and would have been very hard to pin to a specific call site.
 
 **Challenges Overcome**
 
-Successfully diagnosing a flaky test caused by asynchronous garbage collection timing, and utilizing a diagnostic pytest plugin (`gcplug`) to deterministically reproduce and verify the connection leak.
+The hardest moment was in Unit 6, when standard `pytest` runs passed most of the time and I couldn't reproduce the failure consistently. The `gcplug.py` plugin from the issue body was the key — forcing a GC sweep between test blocks turned a flaky failure into a deterministic one, which let me confirm the session was leaking on the specific `call_resolution_bases` call rather than somewhere else in the test setup. Without that forcing function, I could have fixed the wrong line.
 
 **What I'd Do Differently Next Time**
 
-Establish database session boundary checks earlier during code reviews to catch deferred queries outside active context managers before they reach integration test suites.
+In Unit 7, the ruff line-length warning in my patch file was only caught by the gate, not by my own review before committing. Next time I would run `ruff check` locally as part of writing the fix rather than relying on the gate to catch it — the gate is a safety net, not a replacement for the pre-commit check.
 
 ---
 
