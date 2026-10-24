@@ -185,13 +185,21 @@ Move the invocation of `call_resolution_bases` directly inside the active `async
 
 ## Testing Strategy
 
-To verify the fix, we re-run the exact reproduction command against the modified codebase:
+Two observable checks prove the fix.
+
+**Check 1 — Reproduction command before and after.**
+Re-run the exact reproduction command from the issue against the modified codebase:
 
 ```bash
 PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug
 ```
 
-Outcome: All 8 tests passed successfully in 3.93s with zero connection leak warnings, zero operational errors, and zero pending rollback failures.
+Before fix: `StaticPool` garbage-collector warning, `sqlite3.OperationalError: no such table: repositories`, `PendingRollbackError: Can't reconnect until invalid transaction is rolled back.`
+
+After fix: `8 passed in 3.93s` — zero connection leak warnings, zero operational errors, zero pending rollback failures.
+
+**Check 2 — Repository's own CI checks.**
+GitHub CI ran the full test suite, lint (`ruff`), and type checking (`mypy`) on the PR branch. All checks passed. The PR-monitor confirmed the green CI state in Unit 8. This rules out regressions in any other part of the codebase touched by the change.
 
 **Toolkit**
 
