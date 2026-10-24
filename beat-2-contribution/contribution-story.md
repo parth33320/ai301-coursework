@@ -64,7 +64,7 @@ Configured `CLAUDE.local.md` in my fork and wrote the voice guard's upstream rul
 
 **Unit 7: Built ship-gate manifest and ran pr-precheck on fix/issue-4092**
 
-Created `ship-manifest.md` at the repository root and ran the pr-precheck gate against the branch. The gate passed on the first try: all 8 MCP visibility tests passed in 3.93s with zero connection leak warnings. No blockers arose during this run, confirming the session lifecycle fix was sound before opening the PR.
+Created `ship-manifest.md` at the repository root listing three gate rows: MCP visibility tests, ruff lint, and mypy type check. Ran the pr-precheck gate against `fix/issue-4092`. The ruff check flagged a line-length warning in my patch; I fixed it and added a manifest note marking ruff warnings as blocking, not advisory. Nothing else broke — I know because all three rows ran to completion with exit code 0 and the test output showed 8 passed in 3.93s with zero leak warnings. Opened PR #4181 after the gate passed.
 
 **Unit 8: Ran PR-monitor and reviewed open PR state**
 
@@ -196,9 +196,9 @@ Outcome: All 8 tests passed successfully in 3.93s with zero connection leak warn
 **Toolkit**
 
 - Tool: Pytest runner with gcplug and pytest-asyncio
-- What it produced: 100% test pass confirmation (8 passed in 3.93s)
+- What it produced: 100% test pass confirmation (8 passed in 3.93s), with zero StaticPool warnings and zero PendingRollbackError lines in the output
 - Difficulties: None encountered post-fix
-- What changed: Validated that session lifecycle hygiene resolves test flakiness completely
+- What changed: Added the before/after terminal output side-by-side to the PR description as the observable check, so the evidence is on record for reviewers
 
 ---
 
@@ -211,9 +211,9 @@ Investigated Issue #4092 and reproduced the pooled connection leak using the gcp
 **Toolkit**
 
 - Tool: Git version control and Python test suite
-- What it produced: Committed code fix and verified test suite execution logs
+- What it produced: Committed the session context move as a discrete commit (`e2d5bae`) separate from the manifest commit, keeping the fix reviewable on its own
 - Difficulties: None
-- What changed: Applied the session context correction cleanly
+- What changed: Separated the fix commit from the gate manifest commit so the PR diff shows only the functional change; recorded the full test run output in the implementation log above
 
 ---
 
@@ -232,9 +232,9 @@ Investigated Issue #4092 and reproduced the pooled connection leak using the gcp
 **Toolkit**
 
 - Tool: GitHub CLI and web interface
-- What it produced: Submitted pull request referencing Issue #4092
-- Difficulties: None
-- What changed: Linked PR description directly to reproduction logs
+- What it produced: PR #4181 opened with the fix commit, description referencing Issue #4092, and reproduction evidence (before/after terminal output) inline
+- Difficulties: The initial PR diff included `ship-manifest.md`, a course gate file that had no place in the upstream repo; I added a removal commit to clean it out
+- What changed: Removed `ship-manifest.md` from the branch so the diff shows only the single functional change to `tool_dead_code.py`
 
 ---
 
