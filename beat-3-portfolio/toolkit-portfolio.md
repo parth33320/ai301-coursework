@@ -9,15 +9,15 @@ the repository is not read.
 
 ## Featured Tools
 
-My contribution this term centred on a single real bug: an async database session leak that caused intermittent test failures in a Python MCP server. I chose to feature issue-scout, repro-check, and pr-precheck because each one did visible, datable work on that contribution and changed in response to friction I actually hit. The arc from issue selection through pre-flight gate is the clearest through-line my toolkit has, and these three tools carry it.
+I fixed a mistake in a software (Python MCP server) where a database connection stayed open when it should have closed. This mistake caused the automated testing system to fail randomly. I chose to show three tools because they helped me find (issue-scout), verify (repro-check), and fix (pr-precheck) that specific mistake. These three tools work together like a step-by-step checklist to guide a person from picking a software problem to submitting the final fix.
 
 **issue-scout**
 
 **What it is, and the judgment hole I wrote:** A triage playbook and rubric I configured to evaluate candidate open-source issues, scoring them on maintainer activity, scope feasibility, and dependency risk. The judgment hole is the rubric: I wrote the checks that decide whether an issue is a reasonable first-contribution target given my profile.
 
-**How it evolved, dated:** In October 2026, my initial rubric had a scope check that was too strict — it rejected most real-world issues because their scope descriptions were vaguer than the sandbox packages. I replaced it with the `scope-feasible` row from the Unit 6 patch kit, which adds a difficulty-note output instead of a binary reject. I also added a dated note to `scan-notes.md` flagging that the scout had no signal for missing test dependencies, after the pytest-asyncio gap in the repowise environment cost me an hour during reproduction.
+**How it evolved, dated:** In October 2026, my initial rubric had a scope check that was too strict — it rejected most real-world issues because their scope descriptions were vaguer than the sandbox packages. I replaced it with the `scope-feasible` row from the Unit 6 patch kit, which adds a difficulty-note output instead of a binary reject. I also added a note flagging the project for missing test dependencies, after the pytest-asyncio gap in the repowise environment cost me an hour during issue reproduction.
 
-**Evidence:** The scout's verdict on Issue #4092 (accept, moderate difficulty) pointed directly at the session boundary risk and named `tool_dead_code.py` as the affected file, which matched the actual root cause exactly. Before the scope patch, the same issue would have been rejected because the issue description said "investigate the session lifecycle" without naming a specific line count.
+**Evidence:** The tool's verdict on Issue #4092 (accept, moderate difficulty) named `tool_dead_code.py` as the affected file, which matched the root cause. Before the scope patch, the same issue would have been rejected because the issue description said "investigate the session lifecycle" without further details.
 
 ---
 
