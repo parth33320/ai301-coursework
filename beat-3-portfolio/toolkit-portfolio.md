@@ -60,7 +60,7 @@ Gate ran on branch `fix/issue-4092`, October 2026. Zero connection leak warnings
 ## The Arc
 
 **Beat 1**
-Date: October 2026
+Date: September 2026
 Friction: My issue-scout scope check was too strict for real-world issues — it rejected Issue #4092 because the description said "investigate" rather than naming a specific line count, even though the issue was actually well-scoped.
 Change: Applied the `scope-feasible` patch from Unit 6 materials, replacing the binary scope check with one that emits a difficulty note.
 Result: The scout accepted Issue #4092 with a moderate-difficulty note, and I was able to claim it with confidence.
