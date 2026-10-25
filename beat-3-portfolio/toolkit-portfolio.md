@@ -77,12 +77,6 @@ Friction: The pr-precheck gate flagged a ruff line-length warning in my patch fi
 Change: Fixed the line-length issue and added a manifest note that ruff warnings are blocking.
 Result: Gate passed on the next run; PR #4181 opened with a clean gate log and all 8 tests green.
 
-**Beat 4**
-Date: October 2026
-Friction: After opening PR #4181, I had no signal on whether to follow up with maintainers or wait.
-Change: Ran the pr-monitor playbook to read CI status and draft a potential nudge; my 7-day threshold rule held the draft back.
-Result: Confirmed all CI checks passing and documented maintainer silence as a normal open-source state in the PR section of my contribution story.
-
 ## Limitations and What's Next
 
 The toolkit handles the single-issue contribution loop well, but it has gaps when the problem space is larger. The issue-scout has no signal for repositories where the test setup requires a non-obvious plugin or environment variable — the pytest-asyncio gap I hit this term is a direct example. I would add a "test-setup complexity" signal that scores how much setup the repo's `CONTRIBUTING.md` describes before running tests.
