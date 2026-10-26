@@ -41,16 +41,16 @@ This output — captured from `PYTHONPATH=. pytest tests/unit/server/mcp/test_fi
 
 **pr-precheck**
 
-**What it is, and the judgment hole I wrote:** A ship-gate validation script and manifest (`ship-manifest.md`) that enforces pre-flight checks before a branch is submitted as a PR. My judgment hole is the manifest: I wrote the rows that decide which checks must pass, with dated reasons for anything excluded.
+**What it is, and the judgment hole I wrote:** A validation script and rules (`ship-manifest.md`) that enforces checks before a branch is submitted as a PR. I wrote the rows that decide which checks must pass, with reasons for excluded checks.
 
-**How it evolved, dated:** In October 2026 (Unit 7), I created the initial manifest with three rows: MCP visibility tests, ruff lint, and mypy type check. The ruff check initially flagged a line-length warning in my patch file; I fixed it and added a note to the manifest that line-length warnings are blocking, not advisory. The gate then passed cleanly.
+**How it evolved, dated:** In October 2026, I created the initial manifest with three rows: MCP visibility tests, code formatting (ruff lint) check, and type correctness (mypy type) check. The ruff check initially flagged a line-length warning in my patch file; I fixed it and added a note to the manifest that line-length warnings are blocking, not advisory. The gate then passed cleanly.
 
 **Evidence:**
 ```
 PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug
 =================== 8 passed in 3.93s ===================
 ```
-Gate ran on branch `fix/issue-4092`, October 2026. Zero connection leak warnings, zero `PendingRollbackError` exceptions.
+Gate ran on branch `fix/issue-4092`, October 2026. All 8 tests passed with zero connection leak warnings and zero `PendingRollbackError` exceptions.
 
 ## Inventory
 
