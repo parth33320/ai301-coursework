@@ -23,9 +23,9 @@ I fixed a mistake in a software (Python MCP server) where a database connection 
 
 **repro-check**
 
-**What it is, and the judgment hole I wrote:** A reproduction harness and grading rubric that checks whether a reproduction report is complete enough to post upstream. My judgment hole is the rubric's evidence checks: I wrote the pass conditions for environment specificity, step followability, and honest claim-matching.
+**What it is, and the judgment hole I wrote:** A reproduction harness and grading rubric that checks whether a reproduction report is complete enough to post upstream. My judgment hole is the rubric's evidence checks: I wrote the pass conditions for environment specificity, clear steps, and issue reproducibility.
 
-**How it evolved, dated:** In October 2026 (Unit 6), I added the `gcplug.py` garbage-collection plugin to force deterministic GC sweeps during test execution, because the session leak only surfaced non-deterministically without it. Before the plugin, the reproduction was environment-dependent and would have failed the `followable_and_public_steps` check. After adding it, every run reproduced the `PendingRollbackError` within the first GC sweep.
+**How it evolved, dated:** In October 2026 (Unit 6), I added the `gcplug.py` garbage-collection (GC) plugin to force GC sweeps during test execution. Before the plugin, issue reproduction was random due to environment-dependence and would have failed the `followable_and_public_steps` check. After adding it, every run reproduced the `PendingRollbackError` within the first GC sweep.
 
 **Evidence:**
 ```
@@ -35,7 +35,7 @@ object>>, which will be terminated.
 sqlalchemy.exc.PendingRollbackError: Can't reconnect until invalid transaction is
 rolled back.
 ```
-This output — captured from `PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug` on my fork — is the exact failing behavior the issue reported, produced deterministically.
+This output — captured from `PYTHONPATH=. pytest tests/unit/server/mcp/test_finding_registry_visibility.py -p gcplug` on my fork — is the issue's deterministically produced bug.
 
 ---
 
