@@ -54,8 +54,8 @@ Gate ran on branch `fix/issue-4092`, October 2026. All 8 tests passed with zero 
 
 ## Inventory
 
-- **plan-check:** Used to grade my implementation plan before posting the plan comment on Issue #4092; helped confirm that `call_resolution_bases` scope was correctly bounded to the session block.
-- **pr-monitor:** Deployed in Unit 8 to check PR #4181 state; confirmed CI passing and no maintainer feedback within the first week; held back a nudge per my 7-day threshold rule.
+- **plan-check:** Used to grade my implementation plan before posting the plan comment on Issue #4092; helped confirm that `call_resolution_bases` fix stayed within the correct block.
+- **pr-monitor:** Deployed in October 2026 to check PR #4181 state; confirmed automated-tests/CI passing and no maintainer feedback within the first week; so I waited to remind them as per my 7-day threshold rule.
 
 ## The Arc
 
