@@ -62,28 +62,28 @@ Gate ran on branch `fix/issue-4092`, October 2026. All 8 tests passed with zero 
 **Beat 1**
 Date: September 2026
 Friction: My issue-scout scope check was too strict for real-world issues — it rejected Issue #4092 because the description said "investigate" rather than naming a specific line count, even though the issue was actually well-scoped.
-Change: Applied the `scope-feasible` patch from Unit 6 materials, replacing the binary scope check with one that emits a difficulty note.
-Result: The scout accepted Issue #4092 with a moderate-difficulty note, and I was able to claim it with confidence.
+Change: Applied the `scope-feasible` patch from Unit 6 materials, that changes the binary accept/reject decision with a helpful note about the issue's difficulty level.
+Result: The scout accepted Issue #4092 with a moderate-difficulty note, and I was able to claim it.
 
 **Beat 2**
 Date: October 2026
-Friction: The session leak in `get_dead_code` only surfaced non-deterministically in CI, making it hard to reproduce locally without a forcing function. Standard pytest runs passed most of the time.
+Friction: The database connection error (session leak) in `get_dead_code` happened randomly in the project, making it hard to reproduce locally. Standard pytest runs passed most of the time.
 Change: Added the `gcplug.py` garbage-collection plugin from the issue's repro guide, forcing GC sweeps between test blocks to expose unclosed sessions deterministically.
-Result: Every local run reproduced the `PendingRollbackError` within seconds, giving me concrete terminal output to attach to the PR description.
+Result: Every local run reproduced the `PendingRollbackError`, giving me terminal output to attach to the PR description.
 
 **Beat 3**
 Date: October 2026
-Friction: The pr-precheck gate flagged a ruff line-length warning in my patch file that I hadn't noticed during manual review.
-Change: Fixed the line-length issue and added a manifest note that ruff warnings are blocking.
-Result: Gate passed on the next run; PR #4181 opened with a clean gate log and all 8 tests green.
+Friction: The pr-precheck gate flagged a ruff line-length warning in my final code-change file that I hadn't noticed during manual review.
+Change: Fixed the line-length issue and added a manifest rule that ruff warnings must block a submission until they are fixed.
+Result: Code check passed on the next run; PR #4181 opened with a log and all 8 passed tests.
 
 ## Limitations and What's Next
 
-The toolkit handles the single-issue contribution loop well, but it has gaps when the problem space is larger. The issue-scout has no signal for repositories where the test setup requires a non-obvious plugin or environment variable — the pytest-asyncio gap I hit this term is a direct example. I would add a "test-setup complexity" signal that scores how much setup the repo's `CONTRIBUTING.md` describes before running tests.
+The toolkit handles single-issue contribution task well, but not large tasks. The issue-scout has no signal for repositories where the test setup requires an additional plugin or environment variable — the pytest-asyncio gap I hit this term is a direct example. I would add a "test-setup complexity" signal that scores how much setup the repo's `CONTRIBUTING.md` describes before running tests.
 
-The repro-check rubric is still manually driven; it cannot automatically compare a candidate's terminal output against the issue's expected output. A structured output-diff check would cut the back-and-forth during calibration runs.
+The repro-check rubric is still manually driven; it cannot automatically my bug report against the issue's expected output. A structured output-diff check would save time spent on manually comparing bug reproduction terminal outputs.
 
-The pr-precheck manifest is per-repo, which means starting from scratch for every new contribution. I would build a base manifest template with the most common check patterns (lint, type check, targeted test module) pre-filled.
+The pr-precheck manifest is per-repo, so I must write a new checklist file for every new contribution. I would build a base manifest template with the most common check patterns (lint, type check, targeted test module) pre-filled.
 
 **Tool limits.**
 issue-scout: Cannot detect missing test dependencies or non-obvious environment setup requirements from issue descriptions alone.
